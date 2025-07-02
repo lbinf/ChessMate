@@ -1,0 +1,21 @@
+flowchart TD
+    subgraph Redis
+        Q["chess_game_queue"]
+    end
+    subgraph Consumer
+        S["消息处理主循环"]
+        H1["game_start: 幂等写入ai_chess_game"]
+        H2["move: 幂等写入ai_chess_move"]
+        H3["game_end: 幂等更新ai_chess_game"]
+    end
+    subgraph DB
+        G["ai_chess_game"]
+        M["ai_chess_move"]
+    end
+    Q-->|BaseEvent|S
+    S-->|game_start|H1
+    S-->|move|H2
+    S-->|game_end|H3
+    H1-->|insert or ignore|G
+    H2-->|insert or ignore|M
+    H3-->|update|G

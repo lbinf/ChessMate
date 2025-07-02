@@ -1,0 +1,8 @@
+# This file is for development-specific dependencies.
+# It includes the main application dependencies from requirements.txt.
+
+-r requirements.txt
+
+# --- Development and Testing Tools ---
+pytest==8.2.2
+pytest-flask==1.3.0 
