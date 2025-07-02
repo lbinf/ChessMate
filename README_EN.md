@@ -11,6 +11,7 @@ ChessMate is a Xiangqi (Chinese Chess) assistant analysis platform based on Flas
 - History records
 - Modern frontend
 - Logging & error handling
+- Message queue (Redis) support for JJ Xiangqi AI battles and automatic hint features. [Documentation](doc/REDIS_MESSAGE_QUEUE.md)
 
 ---
 
@@ -97,6 +98,7 @@ pytest
 - Basic frontend
 - Logging & error handling
 - Unit & integration tests
+- Redis message queue integration
 
 ---
 
