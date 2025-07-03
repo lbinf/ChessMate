@@ -12,11 +12,16 @@ ChessMate 是一个基于 Flask 的中国象棋辅助分析平台，集成了图
 - 现代化前端
 - 日志与错误处理
 - 消息队列(redis)，支持jj象棋Ai对战，自动提示功能[文档](doc/REDIS_MESSAGE_QUEUE.md)
+- 基于html+js的象棋界面ui
 
 ---
 ## UI 截图
 - web界面
-![主界面截图](doc/images/ui_screenshot.png)
+- 象棋界面 访问url '/'
+![主界面截图](doc/images/ui_chess.png)
+![主界面截图](doc/images/ui_ananyls.png)
+- 以前老的主界面 访问url '/recongntine'
+![老的界面截图](doc/images/ui_screenshot.png)
 - 命令行
 ![命令行界面截图](doc/images/cli_1.png)
 ![命令行界面截图](doc/images/cli_2.png)
@@ -96,6 +101,7 @@ pytest
 - 日志与错误处理
 - 单元/集成测试
 - redis消息队列集成
+- 基于html+js的象棋界面ui
 
 ---
 

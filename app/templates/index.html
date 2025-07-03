@@ -3,308 +3,404 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>中国象棋AI助手</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>中国象棋 GUI</title>
+    <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet"> -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.font.im/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
             min-height: 100vh;
-            font-family: 'Microsoft YaHei', sans-serif;
+            background-color: #e3f2fd;
         }
-        .main-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
+        .top-bar {
+            background-color: #fff;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .main-content {
+            display: flex;
+            /* flex-direction: row; */
+            padding: 20px;
+            gap: 0;
+            background-color: #e3f2fd;
+            align-items: flex-start;
+
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 180px;
+            min-width: 180px;
+            max-width: 180px;
+            background: #cbe7ff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 18px 12px 18px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .center-area {
+            display: flex;
+            flex: 1 1 0;
+            /* flex-direction: row; */
+            /* flex: 1; */
+            gap: 24px;
+            min-width: 0;
+        }
+        .board-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* flex: 1; */
+            min-width: 0;
+            position: relative;
+        }
+        .side-indicator {
+            position: absolute;
+            right: -60px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        .side-indicator .piece-icon {
+            font-size: 28px;
+            font-weight: bold;
+            background: #fff;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2.5px solid #d32f2f;
+            color: #d32f2f;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .side-indicator.black .piece-icon {
+            color: #222;
+            border-color: #222;
+        }
+        .side-indicator.red {
+            bottom: 0;
+        }
+        .side-indicator.black {
+            top: 0;
+        }
+        .board-container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding:0;
+            margin: auto 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .chessboard {
+            background-color: #f5deb3;
+            border: 2px solid #5a3c20;
+            display: block;
+        }
+        .board-controls {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            padding: 12px 0 0 0;
+            margin-top: 8px;
+            width: 100%;
+        }
+        .board-controls button {
+            background: #fff;
+            border: 1px solid #bbb;
+            border-radius: 4px;
+            font-size: 1.5em;
+            color: #555;
+            cursor: pointer;
+            padding: 4px 16px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .board-controls button:hover {
+            background: #90caf9;
+            color: #1976d2;
+        }
+        .theme-select {
+            margin-left: 10px;
+        }
+        .status-bar {
+            background: #eee;
+            color: #333;
+            font-size: 15px;
+            padding: 4px 12px;
+            border-top: 1px solid #ccc;
+            font-family: monospace;
+        }
+        .status-panel {
+            flex: 1 1 0;
+            background: #e3f2fd;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 18px 12px 18px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .status-panel .fen-row {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+            width: 100%;
+        }
+        .status-panel .fen-col {
+            flex: 1;
+            background: #fff;
+            border-radius: 4px;
+            padding: 4px 8px;
+            min-width: 0;
+            font-size: 14px;
+            word-break: break-all;
+        }
+        .status-panel .fen-col-title {
+            font-weight: bold;
+            margin-bottom: 2px;
+            font-size: 15px;
+        }
+        .status-panel .move-list {
+            font-size: 15px;
+            background: #fff;
+            border-radius: 4px;
+            padding: 4px 8px;
+            max-height: 180px;
+            overflow-y: auto;
+            width: 100%;
+        }
+        .modal-mask {
+            position: fixed;
+            left: 0; top: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.25);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-box {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+            padding: 28px 32px 20px 32px;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .modal-box input {
+            width: 260px;
+            font-size: 16px;
+            margin-bottom: 16px;
+            padding: 6px 10px;
+        }
+        .modal-box .btn {
+            width: 120px;
+        }
+        /**图片上传功能*/
+        .upload-modal-box {
+            min-width: 400px;
+            max-width: 90vw;
+            min-height: 420px;
+            padding: 32px 36px 24px 36px;
+            box-sizing: border-box;
+        }
+        .upload-modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 18px;
+            text-align: center;
         }
         .upload-area {
-            border: 3px dashed #667eea;
-            border-radius: 15px;
-            transition: all 0.3s ease;
+            border: 2.5px dashed #90caf9;
+            border-radius: 10px;
+            background: #f5fafd;
+            min-height: 220px;
+            min-width: 320px;
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-        }
-        .upload-area:hover {
-            border-color: #764ba2;
-            background-color: rgba(102, 126, 234, 0.05);
+            margin-bottom: 18px;
+            padding: 24px 12px;
+            transition: border-color 0.2s;
         }
         .upload-area.dragover {
-            border-color: #764ba2;
-            background-color: rgba(102, 126, 234, 0.1);
+            border-color: #1976d2;
+            background: #e3f2fd;
         }
-        .btn-primary {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border: none;
-            border-radius: 25px;
-            padding: 12px 30px;
-            font-weight: 600;
-            transition: all 0.3s ease;
+        .upload-tip {
+            color: #888;
+            font-size: 16px;
+            margin-bottom: 10px;
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        #previewImg {
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            background: #fff;
         }
-        .result-card {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
+        .upload-modal-actions {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-top: 18px;
         }
-        .parameter-card {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            border: 1px solid #e9ecef;
-        }
-        .loading {
+         .loading {
             display: none;
         }
         .spinner-border {
             width: 3rem;
             height: 3rem;
         }
-        .history-item {
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-left: 4px solid #667eea;
-        }
-        .platform-badge {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-        }
-        .paste-hint {
-            background: rgba(102, 126, 234, 0.1);
-            border: 1px solid rgba(102, 126, 234, 0.3);
-            border-radius: 8px;
-            padding: 8px 12px;
-            margin: 10px 0;
-        }
-        kbd {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 3px;
-            box-shadow: 0 1px 0 rgba(0,0,0,0.2);
-            color: #495057;
-            font-size: 0.875em;
-            padding: 2px 6px;
-        }
-        .btn-outline-primary {
-            border-color: #667eea;
-            color: #667eea;
-            border-radius: 25px;
-            padding: 12px 30px;
-        }
-        .btn-outline-primary:hover {
-            background-color: #667eea;
-            border-color: #667eea;
-            color: white;
-        }
-        .btn-secondary {
-            border: none;
-            border-radius: 25px;
-            padding: 12px 30px;
-        }
-        .input-group .clear-fen-btn {
-            border: none;
-            background: transparent;
-            box-shadow: none;
-            color: #bbb;
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 2;
-            padding: 0 8px;
-            font-size: 1.2em;
-            transition: color 0.2s, background 0.2s;
-        }
-        .input-group .clear-fen-btn:focus {
-            outline: none;
-            box-shadow: none;
-        }
-        .input-group .clear-fen-btn:hover {
-            color: #ff5c5c;
-            background: #f8f9fa;
-            border-radius: 50%;
-        }
-        .input-group {
-            position: relative;
-        }
-        #fen-input {
-            padding-right: 2.5em;
-        }
     </style>
 </head>
 <body>
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-12">
-                <div class="main-container p-5">
-                    <!-- 标题 -->
-                    <div class="text-center mb-5">
-                        <h1 class="display-4 fw-bold text-primary mb-3">
-                            <i class="fas fa-chess-board me-3"></i>中国象棋AI助手
-                        </h1>
-                        <p class="lead text-muted">智能识别棋盘，提供最佳走法建议</p>
+    <div class="top-bar">
+        <div><b>泡泡象棋</b></div>
+        <div>
+            <label>主题: </label>
+            <select id="themeSelect" class="theme-select">
+                <option value="default">默认</option>
+                <option value="dark">深色</option>
+            </select>
+            <label style="margin-left: 15px;">缩放等级: </label>
+            <input type="range" id="themeLevelSlider" min="6" max="16" value="16" style="width: 100px; margin: 0 10px;">
+            <span id="themeLevelValue">16</span>
+            <i class="fas fa-cog"></i>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="sidebar">
+            <div id="currentSidePanel" style="display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+                <div id="currentSideIcon" style="font-size:28px;font-weight:bold;width:48px;height:48px;line-height:48px;border-radius:50%;border:2.5px solid #d32f2f;color:#d32f2f;background:radial-gradient(circle at 30% 30%, #e3f2fd 60%, #d32f2f 100%);box-shadow:0 0 16px #90caf9,0 2px 8px rgba(0,0,0,0.08);display:flex;align-items:center;justify-content:center;margin-right:10px;position:relative;overflow:hidden;">
+                    <span style="position:relative;z-index:2;font-family:'ZCOOL QingKe HuangYou','Microsoft YaHei','微软雅黑',Arial,sans-serif;">泡</span>
+                    <span style="position:absolute;top:8px;left:12px;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(1px);z-index:1;"></span>
+                </div>
+                <div id="currentSideLabel" style="font-size:22px;font-weight:bold;color:#d32f2f;letter-spacing:2px;text-shadow:0 2px 8px #e3f2fd;font-family:'ZCOOL QingKe HuangYou','Microsoft YaHei','微软雅黑',Arial,sans-serif;">泡象棋</div>
+            </div>
+            <button id="newGameBtn" class="btn btn-danger btn-sm">新棋局</button>
+            <button id="fenInputBtn" class="btn btn-primary btn-sm">输入FEN</button>
+            <button id="fenCopyBtn" class="btn btn-secondary btn-sm">复制FEN</button>
+            <button id="uploadImageBtn" class="btn btn-success btn-sm" style="margin-bottom:8px;">上传图片识别</button>
+            <button id="resetBtn" class="btn btn-info btn-sm">初始局面</button>
+            <button id="clearBtn" class="btn btn-warning btn-sm">空白局面</button>
+            <button id="flipBtn" class="btn btn-light btn-sm">翻转棋盘</button>
+            <hr style="margin:8px 0;">
+            <input id="uciInput" type="text" placeholder="如 h2f2">
+            <button id="uciMoveBtn" class="btn btn-success btn-sm">走子</button>
+            <span id="moveMsg" style="color:#d32f2f;font-size:13px;"></span>
+        </div>
+        <div class="center-area">
+            <div class="board-area">
+                <div class="board-container" style="position:relative;">
+                    <canvas id="chessboardCanvas" class="chessboard"></canvas>
+                    <div id="sideIndicator" class="side-indicator red" style="display:flex;">
+                        <div class="piece-icon">帅</div>
                     </div>
-
-                    <!-- 主要功能区域 -->
-                    <div class="row">
-                        <!-- 左侧：上传和配置 -->
-                        <div class="col-lg-6">
-                            <!-- 文件上传区域 -->
-                            <div class="upload-area p-5 text-center mb-4" id="uploadArea">
-                                <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
-                                <h5 class="mb-3">拖拽图片到此处或点击上传</h5>
-                                <p class="text-muted mb-3">支持 JPG、PNG 格式的棋盘截图</p>
-                                <p class="text-muted mb-3">
-                                    <i class="fas fa-keyboard me-1"></i>
-                                    也可以按 <kbd>Ctrl+V</kbd> 粘贴剪贴板中的图片
-                                </p>
-                                <input type="file" id="imageInput" accept="image/*" class="d-none">
-                                <button class="btn btn-primary me-2" onclick="document.getElementById('imageInput').click()">
-                                    <i class="fas fa-upload me-2"></i>选择图片
-                                </button>
-                                <button class="btn btn-outline-primary" onclick="pasteImage()">
-                                    <i class="fas fa-paste me-2"></i>粘贴图片
-                                </button>
-                            </div>
-                            <!-- FEN Analysis Card -->
-                            <div class="card mt-4 mb-4">
-                                <div class="input-group">
-                                    <input type="text" id="fen-input" class="form-control" placeholder="Enter FEN string (e.g., rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w)">
-                                    <button class="clear-fen-btn" type="button" id="clear-fen-btn" title="清除" onclick="clearFenInput()">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- 操作按钮 -->
-                            <div class="text-center mb-4">
-                                <button class="btn btn-primary btn-lg me-3" onclick="analyzeChess()" id="analyzeBtn">
-                                    <i class="fas fa-brain me-2"></i>分析棋局
-                                </button>
-                                <button class="btn btn-secondary btn-lg" onclick="newGame()">
-                                    <i class="fas fa-plus me-2"></i>新游戏
-                                </button>
-                            </div>
-
-                            <!-- 加载状态 -->
-                            <div class="loading text-center" id="loading">
-                                <div class="spinner-border text-primary mb-3" role="status">
-                                    <span class="visually-hidden">分析中...</span>
-                                </div>
-                                <h5>正在分析棋局，请稍候...</h5>
-                                <p class="text-muted">AI引擎正在计算最佳走法</p>
-                            </div>
-                            <!-- 参数配置 -->
-                            <div class="parameter-card p-4 mb-4">
-                                <h5 class="mb-3"><i class="fas fa-cog me-2"></i>参数配置</h5>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">游戏平台</label>
-                                        <select class="form-select" id="platform">
-                                            <option value="JJ">JJ象棋</option>
-                                            <option value="TT">天天象棋</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">自动模式</label>
-                                        <select class="form-select" id="autoModel">
-                                            <option value="On">开启</option>
-                                            <option value="Off">关闭</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">搜索深度</label>
-                                        <div class="input-group">
-                                            <button class="btn btn-outline-secondary" onclick="adjustParameter('depth', false)">
-                                                <i class="fas fa-minus"></i>
-                                            </button>
-                                            <input type="number" class="form-control text-center" id="depth" value="20" min="5" max="200">
-                                            <button class="btn btn-outline-secondary" onclick="adjustParameter('depth', true)">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">思考时间(毫秒)</label>
-                                        <div class="input-group">
-                                            <button class="btn btn-outline-secondary" onclick="adjustParameter('movetime', false)">
-                                                <i class="fas fa-minus"></i>
-                                            </button>
-                                            <input type="number" class="form-control text-center" id="movetime" value="3000" min="1000" max="40000">
-                                            <button class="btn btn-outline-secondary" onclick="adjustParameter('movetime', true)">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">搜索参数</label>
-                                        <select class="form-select" id="goParam">
-                                            <option value="depth">按深度搜索</option>
-                                            <option value="movetime">按时间搜索</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">操作</label>
-                                        <div class="d-grid">
-                                            <button class="btn btn-warning" onclick="resetParameters()">
-                                                <i class="fas fa-undo me-2"></i>恢复默认
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            
-                        </div>
-
-                        <!-- 右侧：结果显示 -->
-                        <div class="col-lg-6">
-                            <!-- Next Move Display -->
-                            <div class="card mb-4 d-none" id="nextMoveCard" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-                                <div class="card-body text-center p-4" id="nextMoveContent">
-                                    <!-- JS will inject content here -->
-                                </div>
-                            </div>
-
-                            <!-- 历史记录 -->
-                            <div class="parameter-card p-4">
-                                <div class="history-section mb-4">
-                                    <h5 class="mb-3"><i class="fas fa-history me-2"></i>当前棋局</h5>
-                                    <div class="list-group" id="historyList">
-                                        <p class="text-muted text-center">暂无历史记录</p>
-                                    </div>
-                                </div>
-                                <div class="history-section">
-                                    <h5 class="mb-3"><i class="fas fa-archive me-2"></i>上一局棋谱</h5>
-                                    <div class="list-group" id="previousHistoryList">
-                                        <p class="text-center text-muted mt-3">没有上一局的记录</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Result Card -->
-                            <div class="card mt-4">
-                                <!-- ... existing code ... -->
-                            </div>
-                        </div>
+                </div>
+                <div class="board-controls">
+                    <button onclick="prevChess()"><i class="fas fa-angle-double-left"></i></button>
+                    <button onclick="prevMove()"><i class="fas fa-angle-left"></i></button>
+                    <button onclick="nextMove()"><i class="fas fa-angle-right"></i></button>
+                    <button onclick="nextChess()"><i class="fas fa-angle-double-right"></i></button>
+                </div>
+            </div>
+           
+        </div>
+        <div class="status-panel">
+            <div class="fen-row" id="ai-move">
+                  <!-- Next Move Display -->
+                <div class="card mb-4 d-none" id="nextMoveCard" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                    <div class="card-body text-center p-4" id="nextMoveContent">
+                        <!-- JS will inject content here -->
                     </div>
+                </div>
+            </div>
+            <div class="fen-row">
+                <div class="fen-col" >
+                    <table style="width:100%;font-size:15px;text-align:center;border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th style="border:1px solid #bbb;">#</th>
+                                <th style="border:1px solid #bbb;">中文走法</th>
+                                <th style="border:1px solid #bbb;">UCI</th>
+                                <th style="border:1px solid #bbb;">FEN</th>
+                            </tr>
+                        </thead>
+                        <tbody id="moveListZhPanel">
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/js/app.js"></script>
+    <div class="status-bar" id="statusBar">状态栏</div>
+    <div id="fenModal" style="display:none;" class="modal-mask">
+        <div class="modal-box">
+            <div style="font-size:18px;font-weight:bold;margin-bottom:10px;">输入FEN字符串</div>
+            <input id="fenModalInput" type="text" placeholder="请输入FEN字符串">
+            <div style="display:flex;gap:16px;">
+                <button id="fenModalOk" class="btn btn-primary btn-sm">确定</button>
+                <button id="fenModalCancel" class="btn btn-secondary btn-sm">取消</button>
+            </div>
+        </div>
+    </div>
+    <!-- 新增：全局提示弹窗 -->
+    <div id="customModal" style="display:none;" class="modal-mask">
+        <div class="modal-box">
+            <div id="customModalMsg" style="font-size:18px;font-weight:bold;margin-bottom:10px;text-align:center;"></div>
+            <div style="display:flex;justify-content:center;">
+                <button id="customModalOk" class="btn btn-primary btn-sm">确定</button>
+            </div>
+        </div>
+    </div>
+    <!-- 新增：上传图片识别模态框 -->
+    <div id="uploadModal" style="display:none;" class="modal-mask">
+        <div class="modal-box upload-modal-box">
+            <div class="upload-modal-title">上传棋盘图片</div>
+            <div id="uploadArea" class="upload-area">
+                <input type="file" id="imageInput" accept="image/*" style="display:none;">
+                <div id="uploadTip">
+                    <div style="text-align: center;"><i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i></div>
+                    <div class="upload-tip">拖拽图片到此，或点击选择/粘贴图片</div>
+                </div>
+                <img id="previewImg" style="display:none;max-width:320px;max-height:320px;margin:10px auto;" />
+                <button id="resetFileBtn" class="btn btn-secondary btn-sm" style="display:none;margin-top:8px;">重选</button>
+            </div>
+            <div class="upload-modal-actions">
+                <button id="analyzeBtn" class="btn btn-primary btn-sm">分析</button>
+                <button id="uploadModalCancel" class="btn btn-secondary btn-sm">取消</button>
+            </div>
+             <!-- 加载状态 -->
+            <div class="loading text-center" id="loading">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">分析中...</span>
+                </div>
+                <h5>正在分析棋局，请稍候...</h5>
+                <p class="text-muted">AI引擎正在计算最佳走法</p>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/config.js"></script>
+    <script src="/static/js/chess.js"></script>
 </body>
-</html> 
+</html>

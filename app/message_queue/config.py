@@ -22,7 +22,6 @@ class Config:
     # 队列配置
     QUEUE_CONFIG = {
         'chess_message_queue': 'chess_message_queue',
-        'chess_message_log_queue': 'chess_message_log_queue',
     }
     
     # 日志配置
