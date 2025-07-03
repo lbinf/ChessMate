@@ -571,6 +571,7 @@ function moveUCI(uciStr) {
     boardState[to.row][to.col] = piece;
     boardState[from.row][from.col] = '';
     selectedPiece = null;
+    currentTurn = (currentTurn === 'w') ? 'b' : 'w';
 
     // 如果当前不是在最后一步，截断moveList
     if (currentStep < moveList.length) {
@@ -590,7 +591,6 @@ function moveUCI(uciStr) {
     // currentStep始终指向最新一步
     currentStep = moveList.length;
 
-    currentTurn = (currentTurn === 'w') ? 'b' : 'w';
     drawBoard();
     updateSideIndicator();
     updateStatusPanel(moveObj, true);
@@ -873,6 +873,7 @@ function renderAIRecommend(aiMove) {
     const { fen, chinese_move,move,is_move } = aiMove;
     const nextMoveCard = document.getElementById('nextMoveCard');
     const nextMoveContent = document.getElementById('nextMoveContent');
+    document.getElementById('ai-move').style.display='block'
     let color = '#212529'
     if(is_move === 'w'){
         color = '#dc3545'

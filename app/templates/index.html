@@ -327,7 +327,7 @@
            
         </div>
         <div class="status-panel">
-            <div class="fen-row" id="ai-move">
+            <div class="fen-row" id="ai-move" style="display: none">
                   <!-- Next Move Display -->
                 <div class="card mb-4 d-none" id="nextMoveCard" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
                     <div class="card-body text-center p-4" id="nextMoveContent">
@@ -364,18 +364,10 @@
             </div>
         </div>
     </div>
-    <!-- 新增：全局提示弹窗 -->
-    <div id="customModal" style="display:none;" class="modal-mask">
-        <div class="modal-box">
-            <div id="customModalMsg" style="font-size:18px;font-weight:bold;margin-bottom:10px;text-align:center;"></div>
-            <div style="display:flex;justify-content:center;">
-                <button id="customModalOk" class="btn btn-primary btn-sm">确定</button>
-            </div>
-        </div>
-    </div>
+
     <!-- 新增：上传图片识别模态框 -->
     <div id="uploadModal" style="display:none;" class="modal-mask">
-        <div class="modal-box upload-modal-box">
+        <div class="modal-box upload-modal-box" style="width: 600px">
             <div class="upload-modal-title">上传棋盘图片</div>
             <div id="uploadArea" class="upload-area">
                 <input type="file" id="imageInput" accept="image/*" style="display:none;">
@@ -397,6 +389,15 @@
                 </div>
                 <h5>正在分析棋局，请稍候...</h5>
                 <p class="text-muted">AI引擎正在计算最佳走法</p>
+            </div>
+        </div>
+    </div>
+    <!-- 新增：全局提示弹窗 -->
+    <div id="customModal" style="display:none;" class="modal-mask">
+        <div class="modal-box">
+            <div id="customModalMsg" style="font-size:18px;font-weight:bold;margin-bottom:10px;text-align:center;"></div>
+            <div style="display:flex;justify-content:center;">
+                <button id="customModalOk" class="btn btn-primary btn-sm">确定</button>
             </div>
         </div>
     </div>
